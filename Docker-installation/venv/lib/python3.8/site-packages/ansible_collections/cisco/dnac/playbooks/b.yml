@@ -1,0 +1,52 @@
+---
+    - hosts: dnac_servers
+      vars_files:
+        - credentials.yml
+      vars:
+        dnac_login: &dnac_login
+          dnac_host: "{{ dnac_host }}"
+          dnac_username: "{{ dnac_username }}"
+          dnac_password: "{{ dnac_password }}"
+          dnac_verify: "{{ dnac_verify }}"
+          dnac_port: "{{ dnac_port }}"
+          dnac_version: "{{ dnac_version }}"
+          dnac_debug: "{{ dnac_debug }}"
+      gather_facts: false
+      tasks:
+
+        - name: Create a wireless profile
+          cisco.dnac.wireless_profile:
+            <<: *dnac_login
+            state: present
+            profileDetails:
+              name: string
+              sites:
+              - string
+              ssidDetails:
+              - enableFabric: true
+                flexConnect:
+                  enableFlexConnect: true
+                  localToVlan: 0
+                interfaceName: string
+                name: string
+                type: string
+          register: result
+
+        # - name: Update all
+        #   cisco.dnac.business_sda_hostonboarding_ssid_ippool:
+        #     <<: *dnac_login
+        #     state: present
+        #     # scalableGroupName: string
+        #     # siteNameHierarchy: string
+        #     # ssidNames:
+        #     # - string
+        #     # vlanName: string
+        #     #scalableGroupName: 
+        #     siteNameHierarchy: "Global/United Kingdom/Barlborough"
+        #     ssidNames: "SDA_Guest"
+        #     vlanName: "Tester2"
+        #   register: result
+
+        - name: Show result
+          ansible.builtin.debug:
+            msg: "{{ result }}"

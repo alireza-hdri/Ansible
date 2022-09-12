@@ -1,0 +1,48 @@
+- name: Second Play
+  hosts: all
+  vars:
+    docker_requirements:
+      - ca-certificates 
+      - curl
+      - gnupg
+      - lsb-release
+
+    docker_packages:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+  
+  tasks:
+    - name : check docker installation
+      ignore_errors: yes
+      register: result
+      shell: which docker
+
+    - name: check result 
+      debug:
+        var: result
+
+    - name : install docker requirement
+      when: result.rc != 0
+      become: true
+      apt:
+        name: "{{ docker_requirements }}"
+        state: present
+
+    - name: add docker apt repository key
+      when: result.rc != 0
+      become: true 
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+    - name : add docker repository
+      when: result.rc != 0
+      become: true
+      apt_repository:
+        repo: deb [arch=amd64 singed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ asnible_fact.lsb.codename }} stable
+  
+    - name: install docker
+      when: result.rc != 0
+      become: true 
+      apt:
+        name: "{{ docker_packages }}"
+        state: present

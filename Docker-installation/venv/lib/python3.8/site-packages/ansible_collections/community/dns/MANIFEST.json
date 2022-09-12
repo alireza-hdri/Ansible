@@ -1,0 +1,37 @@
+{
+ "collection_info": {
+  "namespace": "community",
+  "name": "dns",
+  "version": "2.3.1",
+  "authors": [
+   "Felix Fontein (github.com/felixfontein)",
+   "Markus Bergholz (github.com/markuman)"
+  ],
+  "readme": "README.md",
+  "tags": [
+   "community",
+   "dns",
+   "hosttech",
+   "hetzner"
+  ],
+  "description": "Plugins and modules for working with DNS",
+  "license": [
+   "GPL-3.0-or-later",
+   "MPL-2.0"
+  ],
+  "license_file": null,
+  "dependencies": {},
+  "repository": "https://github.com/ansible-collections/community.dns",
+  "documentation": "https://docs.ansible.com/ansible/devel/collections/community/dns/",
+  "homepage": "https://github.com/ansible-collections/community.dns",
+  "issues": "https://github.com/ansible-collections/community.dns/issues"
+ },
+ "file_manifest_file": {
+  "name": "FILES.json",
+  "ftype": "file",
+  "chksum_type": "sha256",
+  "chksum_sha256": "f5d564aa2b33499b426b26a771c71a76a6c98b08abf12f529411262851cfcc06",
+  "format": 1
+ },
+ "format": 1
+}
