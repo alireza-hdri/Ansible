@@ -18,6 +18,14 @@
       register: result
       shell: which docker
 
+    - name: Add Docker’s official GPG key Part1
+      become: true
+      shell: mkdir -p /etc/apt/keyrings
+
+    - name: Add Docker’s official GPG key Part2
+      become: true
+      shell: url -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg    
+
     - name: check result 
       debug:
         var: result
