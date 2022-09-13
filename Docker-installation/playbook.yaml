@@ -18,17 +18,9 @@
       register: result
       shell: which docker
 
-    - name: Add Docker’s official GPG key Part1
-      become: true
-      shell: mkdir -p /etc/apt/keyrings
-
-    - name: Add Docker’s official GPG key Part2
-      become: true
-      shell: url -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg    
-
-    - name: check result 
+    - name: check result of which docker command.
       debug:
-        var: result
+        var: result 
 
     - name : install docker requirement
       when: result.rc != 0
@@ -36,12 +28,23 @@
       apt:
         name: "{{ docker_requirements }}"
         state: present
+  
+    - name: Add Docker’s official GPG key Part1
+      become: true
+      shell: mkdir -p /etc/apt/keyrings
+
+    - name: Add Docker’s official GPG key Part2
+      become: true
+      shell: 
+        cmd: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    
 
     - name: add docker apt repository key
       when: result.rc != 0
       become: true 
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
+
     - name : add docker repository
       when: result.rc != 0
       become: true
