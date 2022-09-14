@@ -1,3 +1,6 @@
+# To run this code should use -K for give become password in the command line.
+# Also -vvv can used for verbose.
+
 - name: Second Play
   hosts: all
   vars:
@@ -33,10 +36,11 @@
       become: true
       shell: mkdir -p /etc/apt/keyrings
 
-    - name: Add Docker’s official GPG key Part2
+    - name: Add Docker GPG apt Key
       become: true
-      shell: 
-        cmd: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
     
 
     - name: add docker apt repository key
@@ -49,7 +53,7 @@
       when: result.rc != 0
       become: true
       apt_repository:
-        repo: deb [arch=amd64 singed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ asnible_fact.lsb.codename }} stable
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
   
     - name: install docker
       when: result.rc != 0
