@@ -1,0 +1,13 @@
+- hosts: all
+  vars_files:
+    - secret.yaml
+  vars:
+    - myservice_password: " {{ vault_myservice_password }}"
+  tasks:
+    - shell: "env"
+      environment: 
+        MY_SVC_PASSWORD: "{{ myservice_password }}"
+
+    - register: result
+      debug:
+        var: result

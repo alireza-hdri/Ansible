@@ -1,0 +1,39 @@
+- hosts: webserver
+  become: true
+  tasks:
+    - name: install nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: copy nginx file
+      copy: 
+        src: default
+        dest: /etc/nginx/sites-enabled/default    
+      notify:
+        - restart nginx
+        - show result
+
+    - name: craete nginx dir
+      file:
+        state: directory
+        recurse : yes
+        path: /opt/nginx
+
+    - name: copy index file
+      copy:
+        src: index.html
+        dest: /opt/nginx/index.html
+ 
+  handlers:
+    - name: restart nginx 
+      ignore_errors: yes
+      systemd:
+        name: nginx
+        state : restarted
+      register: result
+
+    - name: show result
+      debug:
+        var: result
+      
