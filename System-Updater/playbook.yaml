@@ -1,0 +1,16 @@
+- name: First Play
+  hosts: all
+
+  tasks:
+    - name : Run apt update
+      ignore_errors: yes
+      became: true
+      shell: apt update 
+
+    - name : Run apt upgrade
+      become: true
+      shell: apt upgrade -y
+  
+    - name: Run apt full-upgrade
+      become: true
+      shell: apt full-upgrade -y
