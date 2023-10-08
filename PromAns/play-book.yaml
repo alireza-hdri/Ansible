@@ -1,0 +1,61 @@
+- name: Installing Node-exporters
+  hosts: Node-exporters
+  ignore_errors: yes
+  become: true
+  tasks:
+
+    - name: pull Node-exporter image
+    docker_image:
+      name: prom/node-exporter:v1.6.1
+
+    - name : make dir for Node-exporter
+      ansible.builtin.file:
+        path: ~/Node-exporter
+        state: directory
+
+    - name: Copy docker-compose file
+      ansible.builtin.copy:
+        src: ./Node-exporter.yaml    #change it with your good
+        dest: ~/Node-exporter
+  
+    - name: Change the working directory to ~/Node-exporter and run docker command
+      ansible.builtin.command: docker-compose -f Node-exporter.yaml up -d
+      args:
+        chdir: ~/Node-exporter
+
+- name: Installing prometheus
+  hosts: Prometheus-hosts
+  ignore_errors: yes
+  become: true
+  tasks:
+
+    - name: pull Node-exporter image
+    docker_image:
+      name: prom/prometheus:v2.47.0
+    
+    - name : make dir for prometheus
+      ansible.builtin.file:
+        path: ~/Prometheus
+        state: directory
+
+    - name: Copy docker-compose file
+      ansible.builtin.copy:
+        src: ./Prom.yaml    #change it with your good
+        dest: ~/Prometheus
+      
+    - name: Create data dir
+      ansible.builtin.file:
+        path: ~/Prometheus/data
+        state: directory
+        mode: '777'
+
+    - name: Copy prometheus.yaml
+      ansible.builtin.copy:
+        src: ./prometheus.yml   #change it with your good
+        dest: ~/Prometheus
+
+    - name: Change the working directory to ~/prometheus and run docker command
+      ansible.builtin.command: docker-compose -f Prom.yaml up -d
+      args:
+        chdir: ~/Prometheus
+
